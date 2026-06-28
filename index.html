@@ -264,6 +264,20 @@
     letter-spacing:.2em;color:var(--ink);display:flex;overflow:hidden}
   .pre-name span{display:inline-block;transform:translateY(110%);animation:preUp .7s cubic-bezier(.22,1,.36,1) forwards}
   @keyframes preUp{to{transform:none}}
+  .pre-inner{display:flex;flex-direction:column;align-items:center;gap:0}
+  .lang-choice{display:flex;gap:16px;margin-top:38px;opacity:0;transform:translateY(16px);
+    pointer-events:none;transition:opacity .6s ease, transform .6s cubic-bezier(.22,1,.36,1)}
+  .lang-choice.show{opacity:1;transform:none;pointer-events:auto}
+  .lang-btn{font-family:"Inter",sans-serif;font-size:15px;font-weight:500;color:var(--ink);
+    background:var(--card);border:1px solid var(--line);border-radius:30px;padding:13px 30px;
+    cursor:pointer;transition:transform .25s, background .25s, color .25s, border-color .25s;
+    -webkit-tap-highlight-color:transparent}
+  .lang-btn:hover{transform:translateY(-3px);background:var(--primary);color:#fff;border-color:var(--primary)}
+  .lang-btn[data-lang="en"]{position:relative}
+  .lang-soon{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);
+    font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+  .lang-btn[data-lang="en"]:hover .lang-soon{color:var(--primary)}
+  @media(max-width:480px){.lang-choice{flex-direction:column;width:80%}.lang-btn{width:100%}}
   .pre-bar{position:absolute;bottom:0;left:0;height:3px;width:0;
     background:linear-gradient(90deg,#5C63F1,#9b6cf0,#e0567f);animation:preLoad 1.4s ease forwards}
   @keyframes preLoad{to{width:100%}}
@@ -463,7 +477,11 @@
 </style>
 </head>
 <body>
-<div id="preloader"><div class="pre-name" id="preName"></div><div class="pre-bar"></div></div>
+<div id="preloader"><div class="pre-inner"><div class="pre-name" id="preName"></div>
+  <div class="lang-choice" id="langChoice">
+    <button class="lang-btn" data-lang="ua">Українська</button>
+    <button class="lang-btn" data-lang="en">English<span class="lang-soon">coming soon</span></button>
+  </div></div><div class="pre-bar"></div></div>
 <div class="scroll-prog" id="scrollProg"></div>
 <div class="cursor-glow" id="cursorGlow"></div>
 
@@ -699,7 +717,8 @@
     <h2 class="reveal">Збудуймо щось <em class="grad-word">разом.</em></h2>
     <p class="reveal">Відкритий до фриланс-замовлень, співпраці та можливостей навчання. Напиши — обговоримо.</p>
     <div class="links reveal">
-      <button class="btn fill magnetic" onclick="copyEmail()">Скопіювати пошту</button>
+      <a class="btn fill magnetic" id="bookBtn" href="https://cal.eu/maksym-zahorovskyi/30min" rel="noopener" data-fallback="https://cal.eu/maksym-zahorovskyi/30min">📅 Записатися на консультацію</a>
+      <button class="btn ghost magnetic" onclick="copyEmail()">Скопіювати пошту</button>
       <a class="btn ghost magnetic" href="https://github.com/maksymius12" target="_blank" rel="noopener">GitHub ↗</a>
       <a class="btn ghost magnetic" href="https://t.me/" target="_blank" rel="noopener">Telegram ↗</a>
     </div>
@@ -1037,15 +1056,27 @@
   })();
 
 
-  // ===== Preloader =====
+  // ===== Preloader + language choice =====
   (function(){
     const pre=document.getElementById('preloader'), name=document.getElementById('preName');
+    const choice=document.getElementById('langChoice');
     if(!pre) return;
     const t="ЗАГОРОВСЬКИЙ";
     name.innerHTML=t.split('').map((ch,i)=>`<span style="animation-delay:${i*0.07}s">${ch}</span>`).join('');
-    function hide(){ pre.classList.add('done'); setTimeout(()=>pre.remove(),950); }
-    window.addEventListener('load',()=>setTimeout(hide,1500));
-    setTimeout(hide,2600); // safety
+    function hide(){ pre.classList.add('done'); setTimeout(()=>{ if(pre.parentNode) pre.remove(); },950); }
+    // show language buttons after the name finishes rising
+    setTimeout(()=>{ if(choice) choice.classList.add('show'); }, 1500);
+    if(choice){
+      choice.querySelectorAll('.lang-btn').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+          // both choices currently lead to the Ukrainian site; EN reserved for later
+          try{ window.__lang = btn.dataset.lang; }catch(e){}
+          hide();
+        });
+      });
+    }
+    // safety: if user never clicks, reveal site after a while
+    setTimeout(hide, 12000);
   })();
 
   // ===== Hero floating particles =====
@@ -1160,6 +1191,26 @@
     menu.querySelectorAll('a').forEach(function(a){a.addEventListener('click',close);});
     document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
   })();
+
+
+  // ===== Cal.com popup booking =====
+  (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://cal.eu/embed/embed.js", "init");
+  try {
+    Cal("init", "30min", {origin:"https://cal.eu"});
+    Cal.ns["30min"]("ui", {"hideEventTypeDetails":false,"layout":"month_view"});
+    var bb=document.getElementById('bookBtn');
+    if(bb){
+      bb.setAttribute('data-cal-namespace','30min');
+      bb.setAttribute('data-cal-link','maksym-zahorovskyi/30min');
+      bb.setAttribute('data-cal-origin','https://cal.eu');
+      bb.setAttribute('data-cal-config','{"layout":"month_view"}');
+      // Prevent default navigation so only the Cal popup opens (no extra tab).
+      bb.addEventListener('click', function(e){
+        if(window.Cal){ e.preventDefault(); }
+        // if Cal failed to load, the href acts as a same-tab fallback
+      });
+    }
+  } catch(e){ /* fallback: button stays a normal link */ }
 
 </script>
 
