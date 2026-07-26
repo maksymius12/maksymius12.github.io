@@ -567,7 +567,8 @@
   .now-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px 24px;
     position:relative;overflow:hidden;transition:transform .3s, box-shadow .3s, border-color .3s}
   .now-card:hover{transform:translateY(-5px);box-shadow:0 24px 50px -30px rgba(0,0,0,.35);border-color:var(--primary)}
-  .now-ico{font-size:30px;margin-bottom:14px}
+  .now-ico{margin-bottom:14px;color:var(--ink);display:inline-flex}
+  .now-ico svg{width:30px;height:30px}
   .now-badge{display:inline-block;font-size:10px;letter-spacing:.08em;text-transform:uppercase;
     font-weight:600;color:var(--primary);background:rgba(92,99,241,.1);padding:4px 10px;border-radius:20px;margin-bottom:12px}
   .now-card h4{font-family:"Fraunces",serif;font-size:20px;font-weight:600;margin-bottom:10px}
@@ -604,6 +605,66 @@
     font-weight:600;margin-bottom:8px}
   .tl-content h4{font-family:"Fraunces",serif;font-size:19px;font-weight:600;margin-bottom:8px;line-height:1.3}
   .tl-content p{font-size:14px;color:var(--muted);line-height:1.65}
+
+  /* ===== AI assistant chat ===== */
+  #chatFab{position:fixed;right:22px;bottom:22px;z-index:9600;width:60px;height:60px;border-radius:50%;
+    background:var(--primary);border:none;cursor:pointer;box-shadow:0 12px 30px -8px rgba(92,99,241,.6);
+    display:flex;align-items:center;justify-content:center;transition:transform .3s, box-shadow .3s;color:#fff;font-size:26px}
+  #chatFab:hover{transform:scale(1.08) rotate(6deg);box-shadow:0 16px 40px -8px rgba(92,99,241,.7)}
+  #chatFab.hidden{opacity:0;pointer-events:none;transform:scale(0)}
+  #chatPanel{position:fixed;right:22px;bottom:22px;z-index:9601;width:min(90vw,370px);height:min(78vh,560px);
+    background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:0 30px 70px -20px rgba(0,0,0,.4);
+    display:flex;flex-direction:column;overflow:hidden;opacity:0;pointer-events:none;
+    transform:translateY(20px) scale(.96);transform-origin:bottom right;
+    transition:opacity .3s, transform .3s cubic-bezier(.22,1,.36,1)}
+  #chatPanel.open{opacity:1;pointer-events:auto;transform:none}
+  .chat-head{background:var(--primary);color:#fff;padding:16px 18px;display:flex;align-items:center;gap:12px}
+  .chat-ava{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.2);
+    display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+  .chat-head-txt h4{font-family:"Fraunces",serif;font-size:16px;font-weight:600;margin:0;line-height:1.2}
+  .chat-head-txt span{font-size:11px;opacity:.85}
+  .chat-close{margin-left:auto;background:none;border:none;color:#fff;font-size:20px;cursor:pointer;opacity:.85}
+  .chat-close:hover{opacity:1}
+  .chat-body{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:var(--bg)}
+  .chat-msg{max-width:85%;padding:11px 14px;border-radius:14px;font-size:14px;line-height:1.5;animation:msgIn .3s ease}
+  @keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .chat-msg.bot{background:var(--card);border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:4px}
+  .chat-msg.user{background:var(--primary);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+  .chat-disclaimer{font-size:10.5px;color:var(--muted);text-align:center;padding:4px 16px;line-height:1.4;
+    background:var(--bg);border-top:1px solid var(--line)}
+  .chat-quick{display:flex;flex-wrap:wrap;gap:7px;padding:12px 16px;background:var(--card);border-top:1px solid var(--line)}
+  .chat-q{font-size:12px;padding:7px 12px;border-radius:16px;border:1px solid var(--primary);
+    color:var(--primary);background:transparent;cursor:pointer;transition:background .2s,color .2s}
+  .chat-q:hover{background:var(--primary);color:#fff}
+  .chat-input-row{display:flex;gap:8px;padding:12px 14px;background:var(--card);border-top:1px solid var(--line)}
+  .chat-input-row input{flex:1;border:1px solid var(--line);border-radius:20px;padding:10px 14px;
+    font-family:"Inter",sans-serif;font-size:13.5px;background:var(--bg);color:var(--ink);outline:none}
+  .chat-input-row input:focus{border-color:var(--primary)}
+  .chat-send{width:40px;height:40px;border-radius:50%;background:var(--primary);border:none;color:#fff;
+    cursor:pointer;font-size:16px;flex-shrink:0;transition:transform .2s}
+  .chat-send:hover{transform:scale(1.1)}
+  @media(max-width:480px){#chatPanel{right:12px;bottom:12px;width:calc(100vw - 24px);height:min(80vh,540px)}
+    #chatFab{right:16px;bottom:16px}}
+
+  /* ===== Konami secret mode ===== */
+  #matrixCanvas{position:fixed;inset:0;z-index:9998;pointer-events:none;opacity:0;
+    transition:opacity .6s}
+  #matrixCanvas.on{opacity:.85}
+  #secretBadge{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.5);z-index:9999;
+    background:#0a0a0a;color:#00ff41;font-family:monospace;font-size:clamp(16px,4vw,26px);
+    padding:24px 36px;border:2px solid #00ff41;border-radius:12px;box-shadow:0 0 40px rgba(0,255,65,.5);
+    opacity:0;pointer-events:none;transition:opacity .4s, transform .4s cubic-bezier(.34,1.56,.64,1);
+    text-align:center;white-space:nowrap}
+  #secretBadge.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+  .konami-hint{font-size:11px;opacity:.5;margin-top:10px;letter-spacing:.1em}
+
+  #chatFab svg{width:26px;height:26px}
+  .chat-ava svg{width:20px;height:20px}
+  .chat-send svg{width:18px;height:18px}
+  #bookBtn{display:inline-flex;align-items:center}
+  #bookBtn svg{flex-shrink:0}
+
+  .tc-icon svg{width:28px;height:28px}
 </style>
 </head>
 <body>
@@ -850,19 +911,19 @@
     <div class="sec-head reveal"><span class="sec-num">06</span><h2 class="sec-title" data-en="What I'm doing now">Чим зараз займаюсь</h2></div>
     <div class="now-grid">
       <div class="now-card reveal">
-        <div class="now-ico">🚀</div>
+        <div class="now-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="30" height="30"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg></div>
         <div class="now-badge" data-en="In progress">В роботі</div>
         <h4>NEXGEN UA</h4>
         <p data-en="Preparing a national school hackathon — February 2027. Building the platform, rules and partnerships. Event author and sole developer.">Готую всеукраїнський шкільний хакатон — лютий 2027. Будую платформу, регламент і партнерства. Автор події та єдиний розробник.</p>
       </div>
       <div class="now-card reveal">
-        <div class="now-ico">🤖</div>
+        <div class="now-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="30" height="30"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg></div>
         <div class="now-badge" data-en="Exploring">Досліджую</div>
         <h4 data-en="AI tools">AI-інструменти</h4>
         <p data-en="Experimenting with AI for development: code and UI generation, integrating LLMs into products, prompt engineering. Finding where they genuinely speed up the work.">Експериментую з AI для розробки: генерація коду й інтерфейсів, інтеграція LLM у продукти, промпт-інжиніринг. Шукаю, де вони реально пришвидшують роботу.</p>
       </div>
       <div class="now-card reveal">
-        <div class="now-ico">📱</div>
+        <div class="now-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="30" height="30"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg></div>
         <div class="now-badge" data-en="Deepening">Поглиблюю</div>
         <h4>Flutter + Firebase</h4>
         <p data-en="Going deeper into mobile app architecture: more complex state, secure Cloud Functions, cleaner patterns. Every project raises the bar.">Заглиблююсь в архітектуру мобільних застосунків: складніший стан, безпечні Cloud Functions, чистіші патерни. Кожен проєкт — нова планка.</p>
@@ -908,7 +969,7 @@
     <h2 class="reveal" data-en-html="Let's build something <em class=&quot;grad-word&quot;>together.</em>">Збудуймо щось <em class="grad-word">разом.</em></h2>
     <p class="reveal" data-en="Open to freelance work, collaboration and learning opportunities. Drop me a line — let's talk.">Відкритий до фриланс-замовлень, співпраці та можливостей навчання. Напиши — обговоримо.</p>
     <div class="links reveal">
-      <a class="btn fill magnetic" id="bookBtn" href="https://cal.eu/maksym-zahorovskyi/30min" rel="noopener" data-fallback="https://cal.eu/maksym-zahorovskyi/30min"data-en="📅 Book a consultation">📅 Записатися на консультацію</a>
+      <a class="btn fill magnetic" id="bookBtn" href="https://cal.eu/maksym-zahorovskyi/30min" rel="noopener" data-fallback="https://cal.eu/maksym-zahorovskyi/30min"data-en="Book a consultation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span style="margin-left:8px">Записатися на консультацію</span></a>
       <button class="btn ghost magnetic" onclick="copyEmail()" data-en="Copy email">Скопіювати пошту</button>
       <a class="btn ghost magnetic" href="https://github.com/maksymius12" target="_blank" rel="noopener">GitHub ↗</a>
       <a class="btn ghost magnetic" href="https://t.me/" target="_blank" rel="noopener">Telegram ↗</a>
@@ -1066,7 +1127,7 @@
 
   // ===== Tech info modal =====
   (function(){
-    const TECH={"Google Maps": ["🗺️", "Platform", "Карти Google — де люди шукають місця поруч. Бізнес може мати там свою точку з фото, годинами роботи й відгуками.", "Створюю та підтверджую точки бізнесу на карті."], "Google Business": ["🏪", "Platform", "Безкоштовний профіль компанії в Google: він показується в пошуку й на картах із фото, описом і контактами.", "Налаштовую профіль повністю — від категорії до фотографій."], "Local SEO": ["📍", "Marketing", "Оптимізація, щоб бізнес знаходили за запитами «поруч зі мною». Правильні категорії, опис і дані вирішують, чи побачить вас клієнт.", "Роблю так, щоб локальний бізнес знаходили в пошуку."], "Client work": ["💼", "Experience", "Робота на замовлення для реального клієнта з його задачами, дедлайнами й очікуваннями.", "Веду проєкт від запиту клієнта до готового результату."], "React Native": ["📱", "Mobile", "Технологія для створення мобільних застосунків одразу під iOS та Android однією кодовою базою.", "Розробляю крос-платформні застосунки, як-от Habit Arena."], "Expo": ["⚡", "Mobile", "Набір інструментів над React Native, що спрощує збірку, тестування й публікацію застосунків.", "Прискорює розробку й публікацію мобільних застосунків."], "TypeScript": ["🔷", "Language", "JavaScript із типами — робить код надійнішим і зрозумілішим, ловить помилки ще до запуску.", "Пишу типобезпечний код для великих застосунків."], "tRPC": ["🔗", "Backend", "Спосіб з'єднати застосунок і сервер так, щоб дані передавалися типобезпечно, без ручного опису API.", "З'єднав AI-асистента Luna із сервером у Habit Arena."], "LLM / AI": ["🤖", "AI", "Великі мовні моделі (як GPT/Gemini) — «мозок» AI-асистентів, що розуміють і генерують текст.", "Інтегрую живих AI-персонажів у застосунки."], "Drizzle ORM": ["🗃️", "Database", "Інструмент, що дозволяє працювати з базою даних через зручний типобезпечний код замість сирих SQL-запитів.", "Опис і робота зі структурою бази даних."], "Figma": ["🎨", "Design", "Найпопулярніший інструмент для дизайну інтерфейсів. У ньому малюють, як виглядатиме застосунок чи сайт, ще до написання коду.", "Проєктую весь UI/UX своїх продуктів — екрани, навігацію, стиль."], "UI/UX": ["✨", "Design", "UI — як виглядає інтерфейс, UX — наскільки зручно ним користуватися. Разом це про те, щоб застосунок був і красивим, і зрозумілим.", "Продумую і вигляд, і логіку взаємодії користувача із застосунком."], "Product Design": ["📐", "Product", "Проєктування продукту в цілому: які екрани потрібні, як вони пов'язані, що користувач робить на кожному кроці.", "Вибудовую продукт від ідеї до повної структури екранів."], "Manus (AI)": ["🤖", "AI Tool", "AI-інструмент, який за описом і дизайном сам генерує робочий код застосунку. Дозволяє швидко зібрати білд без ручного програмування.", "Перетворюю свій Figma-дизайн на робочу бета-версію."], "Flutter": ["📱", "Mobile", "Інструмент від Google для створення мобільних застосунків. Дозволяє писати код один раз — і застосунок працює і на Android, і на iPhone.", "Я будую на ньому більшість своїх мобільних застосунків."], "Firebase": ["🔥", "Backend", "Хмарна платформа від Google: база даних, вхід користувачів, сповіщення — все готове, не треба будувати свій сервер з нуля.", "Зберігаю дані застосунків і керую користувачами."], "Firestore": ["🗂️", "Database", "База даних усередині Firebase, де зберігаються дані застосунку (користувачі, записи, повідомлення) у вигляді гнучких документів.", "Тут живуть усі дані моїх застосунків."], "Cloud Functions": ["☁️", "Backend", "Маленькі програми, що працюють на сервері Google. Виконують важливу логіку там, де користувач не може її підмінити.", "Захищаю бізнес-логіку — наприклад нарахування балів."], "Riverpod": ["🔗", "Architecture", "Спосіб охайно керувати станом застосунку у Flutter — щоб дані й екрани завжди були синхронні.", "Тримаю код застосунку структурованим і передбачуваним."], "FCM": ["🔔", "Notifications", "Firebase Cloud Messaging — сервіс push-сповіщень. Це ті повідомлення, що спливають на телефоні, навіть коли застосунок закритий.", "Надсилаю користувачам сповіщення."], "React": ["⚛️", "Web", "Популярна бібліотека для створення сайтів та веб-інтерфейсів. На ній побудовано пів-інтернету.", "Роблю інтерактивні веб-застосунки й прототипи."], "Node.js": ["🟢", "Backend", "Дозволяє запускати JavaScript на сервері. Часто використовується, щоб побудувати «мозок» сайту — бекенд.", "Пишу серверну частину й проксі для AI-ключів."], "Supabase": ["⚡", "Backend", "Відкрита альтернатива Firebase: база даних, авторизація і доступ — все в одному, на основі PostgreSQL.", "Будую на ньому платформу хакатону NEXGEN UA."], "Auth / RLS": ["🔐", "Security", "Auth — система входу. RLS (Row Level Security) — правила, які гарантують, що кожен бачить тільки свої дані, а не чужі.", "Розмежовую доступ: учасник, організатор, адмін."], "Google OAuth": ["🔓", "Auth", "Технологія «Увійти через Google» — користувач заходить своїм Google-акаунтом, без нового пароля.", "Даю людям швидкий і безпечний вхід."], "Event design": ["🎯", "Product", "Проєктування самої події — формат, правила, етапи, досвід учасника. Не код, а продумування того, як усе працюватиме.", "Придумав концепцію і регламент хакатону."], "Java": ["☕", "Mobile", "Класична мова програмування, одна з основних для нативних Android-застосунків.", "Написав на ній застосунок AudioPlace для Android."], "Android SDK": ["🤖", "Mobile", "Набір інструментів від Google для створення «рідних» застосунків саме під Android.", "Будую нативну частину Android-застосунку."], "C# / ASP.NET": ["🔷", "Backend", "C# — мова від Microsoft. ASP.NET — на ній будують серверну частину й API для застосунків.", "Зробив бекенд і API для AudioPlace."], "SQL Server": ["🗄️", "Database", "База даних від Microsoft для надійного зберігання великих обсягів структурованих даних.", "Зберігаю маршрути й дані застосунку AudioPlace."], "Google Maps": ["🗺️", "Maps", "Карти Google, вбудовані в застосунок — з точками, маршрутами й геолокацією.", "Показую туристичні маршрути на карті."], "Phone Auth": ["📲", "Auth", "Вхід за номером телефону через SMS-код — без пароля, зручно для звичайних користувачів.", "Логін через SMS у застосунку лояльності."], "Client": ["🤝", "Freelance", "Це був замовний проєкт для реального клієнта, за гроші — не навчальний.", "Мій перший платний клієнтський проєкт."], "Prototyping": ["✏️", "Process", "Швидке створення «чернетки» застосунку, щоб показати ідею й погодити її ще до повної розробки.", "Спершу прототип, потім реальна реалізація."], "QR": ["⬛", "Tech", "QR-коди — ті квадратні картинки, які сканують камерою телефону, щоб швидко передати інформацію.", "Перекази й перепустки працюють через QR."], "GitHub Actions": ["⚙️", "DevOps", "Автоматизація: сама збирає й готує застосунок після зміни коду, без ручної роботи.", "Автоматично компілюю APK у AppForge."], "Gemini API": ["✨", "AI", "Доступ до AI-моделі Gemini від Google — щоб застосунок міг розуміти текст і генерувати відповіді.", "Вбудовую ШІ у свої продукти."], "Security": ["🛡️", "Security", "Загальний підхід: робити так, щоб дані були захищені, а систему не можна було зламати чи обдурити.", "Проєктую застосунки безпечними від початку."], "mobile_scanner": ["📷", "Library", "Готовий компонент для Flutter, що сканує QR-коди камерою телефону.", "Сканую перепустки в застосунку AIK Pass."]};
+    const TECH={"Google Maps": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><polygon points='1 6 8 3 16 6 23 3 23 18 16 21 8 18 1 21 1 6'/><line x1='8' y1='3' x2='8' y2='18'/><line x1='16' y1='6' x2='16' y2='21'/></svg>", "Platform", "Карти Google — де люди шукають місця поруч. Бізнес може мати там свою точку з фото, годинами роботи й відгуками.", "Створюю та підтверджую точки бізнесу на карті."], "Google Business": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><path d='M3 9l1-5h16l1 5'/><path d='M4 9v11h16V9'/><path d='M3 9h18'/><path d='M9 20v-6h6v6'/></svg>", "Platform", "Безкоштовний профіль компанії в Google: він показується в пошуку й на картах із фото, описом і контактами.", "Налаштовую профіль повністю — від категорії до фотографій."], "Local SEO": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><path d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z'/><circle cx='12' cy='10' r='3'/></svg>", "Marketing", "Оптимізація, щоб бізнес знаходили за запитами «поруч зі мною». Правильні категорії, опис і дані вирішують, чи побачить вас клієнт.", "Роблю так, щоб локальний бізнес знаходили в пошуку."], "Client work": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><rect x='2' y='7' width='20' height='14' rx='2'/><path d='M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16'/></svg>", "Experience", "Робота на замовлення для реального клієнта з його задачами, дедлайнами й очікуваннями.", "Веду проєкт від запиту клієнта до готового результату."], "React Native": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><rect x='5' y='2' width='14' height='20' rx='2'/><path d='M12 18h.01'/></svg>", "Mobile", "Технологія для створення мобільних застосунків одразу під iOS та Android однією кодовою базою.", "Розробляю крос-платформні застосунки, як-от Habit Arena."], "Expo": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><polygon points='13 2 3 14 12 14 11 22 21 10 12 10 13 2'/></svg>", "Mobile", "Набір інструментів над React Native, що спрощує збірку, тестування й публікацію застосунків.", "Прискорює розробку й публікацію мобільних застосунків."], "TypeScript": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><path d='M12 2l9 9-9 11L3 11z'/></svg>", "Language", "JavaScript із типами — робить код надійнішим і зрозумілішим, ловить помилки ще до запуску.", "Пишу типобезпечний код для великих застосунків."], "tRPC": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><path d='M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71'/><path d='M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71'/></svg>", "Backend", "Спосіб з'єднати застосунок і сервер так, щоб дані передавалися типобезпечно, без ручного опису API.", "З'єднав AI-асистента Luna із сервером у Habit Arena."], "LLM / AI": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><rect x='3' y='11' width='18' height='10' rx='2'/><circle cx='12' cy='5' r='2'/><path d='M12 7v4'/><path d='M8 16h.01M16 16h.01'/></svg>", "AI", "Великі мовні моделі (як GPT/Gemini) — «мозок» AI-асистентів, що розуміють і генерують текст.", "Інтегрую живих AI-персонажів у застосунки."], "Drizzle ORM": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><ellipse cx='12' cy='5' rx='9' ry='3'/><path d='M3 5v14a9 3 0 0 0 18 0V5'/><path d='M3 12a9 3 0 0 0 18 0'/></svg>", "Database", "Інструмент, що дозволяє працювати з базою даних через зручний типобезпечний код замість сирих SQL-запитів.", "Опис і робота зі структурою бази даних."], "Figma": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><path d='M12 2a3 3 0 0 0 0 6 3 3 0 0 0 0-6z'/><path d='M9 2a3 3 0 0 0 0 6h3V2z'/><path d='M9 8a3 3 0 0 0 0 6h3V8z'/><path d='M9 14a3 3 0 1 0 3 3v-3z'/><path d='M12 8h0a3 3 0 1 0 3 3 3 3 0 0 0-3-3z'/></svg>", "Design", "Найпопулярніший інструмент для дизайну інтерфейсів. У ньому малюють, як виглядатиме застосунок чи сайт, ще до написання коду.", "Проєктую весь UI/UX своїх продуктів — екрани, навігацію, стиль."], "UI/UX": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><path d='M12 3l1.9 5.8L20 10l-6.1 1.2L12 17l-1.9-5.8L4 10l6.1-1.2z'/></svg>", "Design", "UI — як виглядає інтерфейс, UX — наскільки зручно ним користуватися. Разом це про те, щоб застосунок був і красивим, і зрозумілим.", "Продумую і вигляд, і логіку взаємодії користувача із застосунком."], "Product Design": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><path d='M12 2L2 22h20z'/><path d='M12 8v8'/><path d='M8 16h8'/></svg>", "Product", "Проєктування продукту в цілому: які екрани потрібні, як вони пов'язані, що користувач робить на кожному кроці.", "Вибудовую продукт від ідеї до повної структури екранів."], "Manus (AI)": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><rect x='3' y='11' width='18' height='10' rx='2'/><circle cx='12' cy='5' r='2'/><path d='M12 7v4'/><path d='M8 16h.01M16 16h.01'/></svg>", "AI Tool", "AI-інструмент, який за описом і дизайном сам генерує робочий код застосунку. Дозволяє швидко зібрати білд без ручного програмування.", "Перетворюю свій Figma-дизайн на робочу бета-версію."], "Flutter": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><path d='M14 2L4 12l3 3 13-13z'/><path d='M14 12l-4 4 4 4 6-6-3-3z'/></svg>", "Mobile", "Інструмент від Google для створення мобільних застосунків. Дозволяє писати код один раз — і застосунок працює і на Android, і на iPhone.", "Я будую на ньому більшість своїх мобільних застосунків."], "Firebase": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><path d='M12 2s4 4 4 8a4 4 0 0 1-8 0c0-1 .5-2 1-3 0 2 1 3 2 3s2-1 2-3c0-3-3-5-3-5z'/></svg>", "Backend", "Хмарна платформа від Google: база даних, вхід користувачів, сповіщення — все готове, не треба будувати свій сервер з нуля.", "Зберігаю дані застосунків і керую користувачами."], "Firestore": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><path d='M4 4h6l2 3h8v13H4z'/><path d='M4 10h18'/></svg>", "Database", "База даних усередині Firebase, де зберігаються дані застосунку (користувачі, записи, повідомлення) у вигляді гнучких документів.", "Тут живуть усі дані моїх застосунків."], "Cloud Functions": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><path d='M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z'/></svg>", "Backend", "Маленькі програми, що працюють на сервері Google. Виконують важливу логіку там, де користувач не може її підмінити.", "Захищаю бізнес-логіку — наприклад нарахування балів."], "Riverpod": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><path d='M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71'/><path d='M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71'/></svg>", "Architecture", "Спосіб охайно керувати станом застосунку у Flutter — щоб дані й екрани завжди були синхронні.", "Тримаю код застосунку структурованим і передбачуваним."], "FCM": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><path d='M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9'/><path d='M13.73 21a2 2 0 0 1-3.46 0'/></svg>", "Notifications", "Firebase Cloud Messaging — сервіс push-сповіщень. Це ті повідомлення, що спливають на телефоні, навіть коли застосунок закритий.", "Надсилаю користувачам сповіщення."], "React": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><circle cx='12' cy='12' r='1.5'/><ellipse cx='12' cy='12' rx='10' ry='4'/><ellipse cx='12' cy='12' rx='10' ry='4' transform='rotate(60 12 12)'/><ellipse cx='12' cy='12' rx='10' ry='4' transform='rotate(120 12 12)'/></svg>", "Web", "Популярна бібліотека для створення сайтів та веб-інтерфейсів. На ній побудовано пів-інтернету.", "Роблю інтерактивні веб-застосунки й прототипи."], "Node.js": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><path d='M12 2a10 10 0 1 0 10 10'/><path d='M12 6v6l4 2'/></svg>", "Backend", "Дозволяє запускати JavaScript на сервері. Часто використовується, щоб побудувати «мозок» сайту — бекенд.", "Пишу серверну частину й проксі для AI-ключів."], "Supabase": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><polygon points='13 2 3 14 12 14 11 22 21 10 12 10 13 2'/></svg>", "Backend", "Відкрита альтернатива Firebase: база даних, авторизація і доступ — все в одному, на основі PostgreSQL.", "Будую на ньому платформу хакатону NEXGEN UA."], "Auth / RLS": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><rect x='3' y='11' width='18' height='11' rx='2'/><path d='M7 11V7a5 5 0 0 1 10 0v4'/></svg>", "Security", "Auth — система входу. RLS (Row Level Security) — правила, які гарантують, що кожен бачить тільки свої дані, а не чужі.", "Розмежовую доступ: учасник, організатор, адмін."], "Google OAuth": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><rect x='3' y='11' width='18' height='11' rx='2'/><path d='M7 11V7a5 5 0 0 1 9.9-1'/></svg>", "Auth", "Технологія «Увійти через Google» — користувач заходить своїм Google-акаунтом, без нового пароля.", "Даю людям швидкий і безпечний вхід."], "Event design": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><circle cx='12' cy='12' r='10'/><circle cx='12' cy='12' r='6'/><circle cx='12' cy='12' r='2'/></svg>", "Product", "Проєктування самої події — формат, правила, етапи, досвід учасника. Не код, а продумування того, як усе працюватиме.", "Придумав концепцію і регламент хакатону."], "Java": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><path d='M18 8h1a4 4 0 0 1 0 8h-1'/><path d='M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4z'/><line x1='6' y1='2' x2='6' y2='4'/><line x1='10' y1='2' x2='10' y2='4'/><line x1='14' y1='2' x2='14' y2='4'/></svg>", "Mobile", "Класична мова програмування, одна з основних для нативних Android-застосунків.", "Написав на ній застосунок AudioPlace для Android."], "Android SDK": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><rect x='3' y='11' width='18' height='10' rx='2'/><circle cx='12' cy='5' r='2'/><path d='M12 7v4'/><path d='M8 16h.01M16 16h.01'/></svg>", "Mobile", "Набір інструментів від Google для створення «рідних» застосунків саме під Android.", "Будую нативну частину Android-застосунку."], "C# / ASP.NET": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><path d='M12 2l9 9-9 11L3 11z'/></svg>", "Backend", "C# — мова від Microsoft. ASP.NET — на ній будують серверну частину й API для застосунків.", "Зробив бекенд і API для AudioPlace."], "SQL Server": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><rect x='4' y='3' width='16' height='6' rx='1'/><rect x='4' y='9' width='16' height='6' rx='1'/><rect x='4' y='15' width='16' height='6' rx='1'/><line x1='8' y1='6' x2='8' y2='6'/><line x1='8' y1='12' x2='8' y2='12'/></svg>", "Database", "База даних від Microsoft для надійного зберігання великих обсягів структурованих даних.", "Зберігаю маршрути й дані застосунку AudioPlace."], "Google Maps": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><polygon points='1 6 8 3 16 6 23 3 23 18 16 21 8 18 1 21 1 6'/><line x1='8' y1='3' x2='8' y2='18'/><line x1='16' y1='6' x2='16' y2='21'/></svg>", "Maps", "Карти Google, вбудовані в застосунок — з точками, маршрутами й геолокацією.", "Показую туристичні маршрути на карті."], "Phone Auth": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><rect x='5' y='2' width='14' height='20' rx='2'/><path d='M12 18h.01'/></svg>", "Auth", "Вхід за номером телефону через SMS-код — без пароля, зручно для звичайних користувачів.", "Логін через SMS у застосунку лояльності."], "Client": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><path d='M8 12l2 2 4-4'/><path d='M20 7l-8 8-4-4-6 6'/></svg>", "Freelance", "Це був замовний проєкт для реального клієнта, за гроші — не навчальний.", "Мій перший платний клієнтський проєкт."], "Prototyping": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><path d='M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7'/><path d='M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z'/></svg>", "Process", "Швидке створення «чернетки» застосунку, щоб показати ідею й погодити її ще до повної розробки.", "Спершу прототип, потім реальна реалізація."], "QR": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><rect x='3' y='3' width='7' height='7'/><rect x='14' y='3' width='7' height='7'/><rect x='3' y='14' width='7' height='7'/><path d='M14 14h3v3M21 14v7M17 21h4M14 18v3'/></svg>", "Tech", "QR-коди — ті квадратні картинки, які сканують камерою телефону, щоб швидко передати інформацію.", "Перекази й перепустки працюють через QR."], "GitHub Actions": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><circle cx='12' cy='12' r='3'/><path d='M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z'/></svg>", "DevOps", "Автоматизація: сама збирає й готує застосунок після зміни коду, без ручної роботи.", "Автоматично компілюю APK у AppForge."], "Gemini API": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><path d='M12 3l1.9 5.8L20 10l-6.1 1.2L12 17l-1.9-5.8L4 10l6.1-1.2z'/></svg>", "AI", "Доступ до AI-моделі Gemini від Google — щоб застосунок міг розуміти текст і генерувати відповіді.", "Вбудовую ШІ у свої продукти."], "Security": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><path d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/></svg>", "Security", "Загальний підхід: робити так, щоб дані були захищені, а систему не можна було зламати чи обдурити.", "Проєктую застосунки безпечними від початку."], "mobile_scanner": ["<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' width='28' height='28'><path d='M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z'/><circle cx='12' cy='13' r='4'/></svg>", "Library", "Готовий компонент для Flutter, що сканує QR-коди камерою телефону.", "Сканую перепустки в застосунку AIK Pass."]};
     const modal=document.getElementById('techModal');
     if(!modal) return;
     const elIcon=document.getElementById('tcIcon'),
@@ -1078,7 +1139,7 @@
     function openTech(name){
       const d=TECH[name];
       if(!d) return;
-      elIcon.textContent=d[0];
+      elIcon.innerHTML=d[0];
       elTitle.textContent=name;
       elCat.textContent=d[1];
       elDesc.textContent=d[2];
@@ -1254,7 +1315,32 @@
     if(!pre) return;
     const t="ЗАГОРОВСЬКИЙ";
     name.innerHTML=t.split('').map((ch,i)=>`<span style="animation-delay:${i*0.07}s">${ch}</span>`).join('');
-    function hide(){ pre.classList.add('done'); setTimeout(()=>{ if(pre.parentNode) pre.remove(); },950); }
+    // lock scrolling until a language is chosen
+    window.scrollTo(0,0);
+    document.documentElement.style.overflow='hidden';
+    document.body.style.overflow='hidden';
+    document.body.style.position='fixed';
+    document.body.style.width='100%';
+    document.body.style.top='0';
+    function preventScroll(e){ e.preventDefault(); }
+    function preventKeys(e){
+      if(['ArrowUp','ArrowDown','PageUp','PageDown','Home','End',' '].indexOf(e.key)!==-1){ e.preventDefault(); }
+    }
+    window.addEventListener('wheel', preventScroll, {passive:false});
+    window.addEventListener('touchmove', preventScroll, {passive:false});
+    window.addEventListener('keydown', preventKeys, {passive:false});
+    function unlock(){
+      document.documentElement.style.overflow='';
+      document.body.style.overflow='';
+      document.body.style.position='';
+      document.body.style.width='';
+      document.body.style.top='';
+      window.removeEventListener('wheel', preventScroll, {passive:false});
+      window.removeEventListener('touchmove', preventScroll, {passive:false});
+      window.removeEventListener('keydown', preventKeys, {passive:false});
+      window.scrollTo(0,0);
+    }
+    function hide(){ unlock(); pre.classList.add('done'); setTimeout(()=>{ if(pre.parentNode) pre.remove(); },950); }
     // show language buttons after the name finishes rising
     setTimeout(()=>{ if(choice) choice.classList.add('show'); }, 1500);
     if(choice){
@@ -1606,7 +1692,246 @@
     if(window.__lang==='en'){ window.__setLang('en'); }
   })();
 
+
+  // ===== AI-style assistant (pre-written answers) =====
+  function initChat(){
+    var fab=document.getElementById('chatFab'),
+        panel=document.getElementById('chatPanel'),
+        closeBtn=document.getElementById('chatClose'),
+        body=document.getElementById('chatBody'),
+        quick=document.getElementById('chatQuick'),
+        input=document.getElementById('chatInput'),
+        send=document.getElementById('chatSend');
+    if(!fab||!panel) return;
+
+    var UA = (window.__lang!=='en');
+    function isEN(){ return window.__lang==='en'; }
+
+    // knowledge base: {keywords, ua, en}
+    var KB=[
+      { key:['проєкт','замовлення','візьмеш','order','project','freelance','take','hire','робот'],
+        ua:'Так, я відкритий до нових проєктів і замовлень 🙌 Найкраще виходить із мобільними застосунками (Flutter + Firebase), вебом і AI-інтеграціями. Напишіть у Telegram чи на пошту — обговоримо ідею й терміни.',
+        en:'Yes, I\'m open to new projects and freelance work 🙌 I\'m strongest with mobile apps (Flutter + Firebase), web and AI integrations. Message me on Telegram or by email — let\'s discuss your idea and timeline.' },
+      { key:['ціна','кошт','вартість','price','cost','how much','pay','бюджет','budget'],
+        ua:'Ціну домовляємось індивідуально — вона залежить від складності й обсягу проєкту. Опишіть, що потрібно, і я зорієнтую. Найшвидше через Telegram або пошту.',
+        en:'Pricing is agreed individually — it depends on the scope and complexity of the project. Describe what you need and I\'ll give you an estimate. Telegram or email is the fastest way.' },
+      { key:['освіт','навчан','досвід','education','study','experience','колегіум','big fish','книг','book','darwin'],
+        ua:'Зараз навчаюсь на IT-напрямі в Архітектурно-інженерному колегіумі А+. Улітку 2025 пройшов Big Fish Camp (IT-напрям, дизайн сайтів), а на курсах Darwin Land написав і надрукував власну художню книгу 📚 Розробляю близько року. Детальніше — у секції «Освіта».',
+        en:'I\'m currently studying IT at the A+ Architecture & Engineering College. In summer 2025 I did Big Fish Camp (IT track, website design), and at the Darwin Land courses I wrote and printed my own work of fiction 📚 I\'ve been developing for about a year. More in the "Education" section.' },
+      { key:['контакт','зв\'яз','звязат','пошт','email','telegram','написати','contact','reach','message'],
+        ua:'Зв\'язатися просто: кнопки Telegram і «Скопіювати пошту» є в секції «Контакт» унизу. Там же можна одразу забронювати консультацію 📅',
+        en:'Easy to reach me: Telegram and "Copy email" buttons are in the "Contact" section below. You can also book a consultation there directly 📅' },
+      { key:['habit','arena','звичк','habit arena'],
+        ua:'Habit Arena — гейміфікований трекер звичок (командний проєкт Team HackDay). Я відповідав за розробку й інтеграцію AI-асистента Luna через серверний LLM. Презентували журі на INFOMATRIX. Деталі й посилання — у секції «Проєкти».',
+        en:'Habit Arena is a gamified habit tracker (a Team HackDay project). I was responsible for development and integrating the AI assistant Luna via a server-side LLM. We presented it to the jury at INFOMATRIX. Details and links are in the "Projects" section.' },
+      { key:['nexgen','хакатон','hackathon'],
+        ua:'NEXGEN UA — всеукраїнський шкільний хакатон, який я готую (лютий 2027). Я і автор події, і єдиний розробник платформи. Більше — у секції «Проєкти».',
+        en:'NEXGEN UA is a national school hackathon I\'m preparing (February 2027). I\'m both the event author and the sole platform developer. More in the "Projects" section.' },
+      { key:['audioplace','аудіо','гід','audio'],
+        ua:'AudioPlace — застосунок аудіогідів. Я повністю спроєктував продукт і UI/UX у Figma, а робочу бету зібрали через AI-інструмент Manus. Скріни — у секції «Проєкти».',
+        en:'AudioPlace is an audio-guide app. I fully designed the product and UI/UX in Figma, and the working beta was built with the AI tool Manus. Screenshots are in the "Projects" section.' },
+      { key:['a+ power','power','валют','currenc','школ'],
+        ua:'A+ Power — застосунок шкільної валюти й винагород (Flutter/Firebase). Я робив Firestore-схему, QR-перекази із серверною валідацією та систему бейджів. Деталі — у «Проєктах».',
+        en:'A+ Power is a school currency & rewards app (Flutter/Firebase). I built the Firestore schema, QR transfers with server-side validation and a badge system. Details in "Projects".' },
+      { key:['taekwondo','тхеквондо','maps','карт','google'],
+        ua:'Для школи Unity Taekwondo я створив точку на Google Maps і налаштував бізнес-профіль (Local SEO). Це реальний клієнтський проєкт — є в секції «Проєкти».',
+        en:'For the Unity Taekwondo school I created a Google Maps listing and set up the business profile (Local SEO). It\'s a real client project — see the "Projects" section.' },
+      { key:['навичк','стек','технолог','skill','stack','tech','flutter','firebase','react'],
+        ua:'Основний стек: Flutter + Firebase (мобільні застосунки), а також React, Node.js, Supabase, Figma й AI-інтеграції (Gemini, LLM). Повний список із рівнями — у секції «Навички».',
+        en:'My core stack: Flutter + Firebase (mobile apps), plus React, Node.js, Supabase, Figma and AI integrations (Gemini, LLM). The full list with levels is in the "Skills" section.' }
+    ];
+
+    var FALLBACK={
+      ua:'Я відповідаю лише на готові теми 🙂 Спробуйте кнопки нижче або напишіть мені напряму (Telegram/пошта в секції «Контакт») — там відповім на будь-що.',
+      en:'I only answer pre-set topics 🙂 Try the buttons below, or message me directly (Telegram/email in the "Contact" section) — I\'ll answer anything there.'
+    };
+
+    var QUICK=[
+      {ua:'Чи візьмешся за проєкт?', en:'Open to projects?', find:'візьмеш'},
+      {ua:'Скільки коштує?', en:'How much?', find:'ціна'},
+      {ua:'Освіта й досвід', en:'Education', find:'освіт'},
+      {ua:'Як зв\'язатися?', en:'Contact', find:'контакт'},
+      {ua:'Розкажи про проєкти', en:'Tell me about projects', find:'проєкт'}
+    ];
+
+    function addMsg(text, who){
+      var m=document.createElement('div');
+      m.className='chat-msg '+who;
+      m.textContent=text;
+      body.appendChild(m);
+      body.scrollTop=body.scrollHeight;
+    }
+
+    function answer(q){
+      var ql=q.toLowerCase();
+      var best=null;
+      for(var i=0;i<KB.length;i++){
+        for(var k=0;k<KB[i].key.length;k++){
+          if(ql.indexOf(KB[i].key[k].toLowerCase())!==-1){ best=KB[i]; break; }
+        }
+        if(best) break;
+      }
+      var reply = best ? (isEN()?best.en:best.ua) : (isEN()?FALLBACK.en:FALLBACK.ua);
+      setTimeout(function(){ addMsg(reply,'bot'); }, 350);
+    }
+
+    function greet(){
+      body.innerHTML='';
+      addMsg(isEN()
+        ? 'Hi! 👋 I\'m Maksym\'s assistant. Ask me about his projects, skills, availability or how to get in touch.'
+        : 'Привіт! 👋 Я асистент Максима. Питайте про проєкти, навички, доступність чи як зв\'язатися.', 'bot');
+    }
+
+    function buildQuick(){
+      quick.innerHTML='';
+      QUICK.forEach(function(q){
+        var btn=document.createElement('button');
+        btn.className='chat-q';
+        btn.textContent=isEN()?q.en:q.ua;
+        btn.addEventListener('click',function(){
+          addMsg(btn.textContent,'user');
+          answer(q.find);
+        });
+        quick.appendChild(btn);
+      });
+    }
+
+    function openChat(){
+      panel.classList.add('open'); fab.classList.add('hidden');
+      if(!body.children.length){ greet(); }
+      buildQuick();
+      // update placeholder lang
+      input.placeholder = isEN()? (input.getAttribute('data-en-ph')||'Type a question...') : 'Напишіть питання...';
+    }
+    function closeChat(){ panel.classList.remove('open'); fab.classList.remove('hidden'); }
+
+    fab.addEventListener('click',openChat);
+    closeBtn.addEventListener('click',closeChat);
+    function submit(){
+      var v=input.value.trim(); if(!v) return;
+      addMsg(v,'user'); input.value='';
+      answer(v);
+    }
+    send.addEventListener('click',submit);
+    input.addEventListener('keydown',function(e){ if(e.key==='Enter') submit(); });
+  }
+  if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', initChat); } else { initChat(); }
+
+
+  // ===== Console easter egg (for developers) =====
+  (function(){
+    var s1='color:#5C63F1;font-size:42px;font-weight:bold;font-family:Georgia,serif';
+    var s2='color:#5C63F1;font-size:14px;font-weight:600';
+    var s3='color:#6b6b73;font-size:13px;line-height:1.6';
+    var s4='color:#15151a;font-size:13px;background:#ECB653;padding:2px 8px;border-radius:4px;font-weight:600';
+    console.log('%cМаксим Загоровський', s1);
+    console.log('%cStudent-developer & AI Engineer · Kyiv 🇺🇦', s2);
+    console.log('%c\nРаз ти відкрив консоль — ти точно з наших 🤝\nЯ будую реальні застосунки на Flutter + Firebase\nі люблю чистий код без хардкоду ключів.', s3);
+    console.log('%c💼 Відкритий до проєктів і співпраці', s4);
+    console.log('%c\n📬 Знайди мене в секції «Контакт» або тисни 💬 на сайті.\n🎮 P.S. Спробуй Konami-код на сторінці ;)', s3);
+    console.log('%c— maksymius12', 'color:#C0614C;font-size:12px;font-style:italic');
+  })();
+
+
+  // ===== Konami code secret mode =====
+  (function(){
+    // use e.code (physical key) so it works on ANY keyboard layout (UA/RU/EN)
+    var seq=['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','KeyB','KeyA'];
+    var pos=0, active=false;
+    document.addEventListener('keydown', function(e){
+      var k=e.code;
+      if(k===seq[pos]){ pos++; if(pos===seq.length){ pos=0; if(!active) activate(); } }
+      else { pos = (k===seq[0]) ? 1 : 0; }
+    });
+
+    function activate(){
+      active=true;
+      var canvas=document.getElementById('matrixCanvas');
+      var badge=document.getElementById('secretBadge');
+      // badge
+      var en = window.__lang==='en';
+      badge.innerHTML = (en
+        ? '⚡ SECRET MODE UNLOCKED<br><span class="konami-hint">you found the konami code — respect 🤝</span>'
+        : '⚡ СЕКРЕТНИЙ РЕЖИМ<br><span class="konami-hint">ти знайшов konami-код — поважаю 🤝</span>');
+      badge.classList.add('show');
+
+      // matrix rain
+      var ctx=canvas.getContext('2d');
+      function resize(){ canvas.width=innerWidth; canvas.height=innerHeight; }
+      resize(); window.addEventListener('resize',resize);
+      canvas.classList.add('on');
+      var chars='アイウエオカキクケコサシスセソMAKSYM01ЗАГОРОВСЬКИЙ'.split('');
+      var fs=16, cols=Math.floor(canvas.width/fs);
+      var drops=Array(cols).fill(1);
+      var rain=setInterval(function(){
+        ctx.fillStyle='rgba(10,10,10,0.08)';
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.fillStyle='#00ff41'; ctx.font=fs+'px monospace';
+        for(var i=0;i<drops.length;i++){
+          var ch=chars[Math.floor(Math.random()*chars.length)];
+          ctx.fillText(ch, i*fs, drops[i]*fs);
+          if(drops[i]*fs>canvas.height && Math.random()>0.975){ drops[i]=0; }
+          drops[i]++;
+        }
+      }, 55);
+
+      // confetti burst
+      confetti();
+
+      // auto-off after 6s
+      setTimeout(function(){
+        badge.classList.remove('show');
+        canvas.classList.remove('on');
+        setTimeout(function(){ clearInterval(rain); ctx.clearRect(0,0,canvas.width,canvas.height); active=false; }, 700);
+      }, 6000);
+    }
+
+    function confetti(){
+      var colors=['#5C63F1','#C0614C','#ECB653','#00ff41','#e84393'];
+      var N=80;
+      var cv=document.createElement('canvas');
+      cv.style.cssText='position:fixed;inset:0;z-index:9999;pointer-events:none';
+      cv.width=innerWidth; cv.height=innerHeight;
+      document.body.appendChild(cv);
+      var cx=cv.getContext('2d');
+      var parts=[];
+      for(var i=0;i<N;i++){
+        parts.push({x:innerWidth/2, y:innerHeight/2, vx:(Math.random()-0.5)*14, vy:(Math.random()-0.5)*14-4,
+          c:colors[Math.floor(Math.random()*colors.length)], s:4+Math.random()*6, life:1});
+      }
+      var t=setInterval(function(){
+        cx.clearRect(0,0,cv.width,cv.height);
+        var alive=false;
+        parts.forEach(function(p){
+          p.vy+=0.3; p.x+=p.vx; p.y+=p.vy; p.life-=0.012;
+          if(p.life>0){ alive=true; cx.globalAlpha=Math.max(0,p.life); cx.fillStyle=p.c;
+            cx.fillRect(p.x,p.y,p.s,p.s); }
+        });
+        if(!alive){ clearInterval(t); cv.remove(); }
+      }, 20);
+    }
+  })();
+
 </script>
 
+
+<button id="chatFab" aria-label="Асистент"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></button>
+<div id="chatPanel" role="dialog" aria-label="Чат-асистент">
+  <div class="chat-head">
+    <div class="chat-ava"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><path d="M8 16h.01M16 16h.01"/></svg></div>
+    <div class="chat-head-txt"><h4 data-en="Maksym's assistant">Асистент Максима</h4><span data-en="quick answers about me">швидкі відповіді про мене</span></div>
+    <button class="chat-close" id="chatClose" aria-label="Закрити">✕</button>
+  </div>
+  <div class="chat-body" id="chatBody"></div>
+  <div class="chat-quick" id="chatQuick"></div>
+  <div class="chat-input-row">
+    <input type="text" id="chatInput" placeholder="Напишіть питання..." data-en-ph="Type a question...">
+    <button class="chat-send" id="chatSend" aria-label="Надіслати"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+  </div>
+  <div class="chat-disclaimer" data-en="⚠️ This isn't real AI — it gives pre-written answers only. Don't rely on it; message me directly for anything specific.">⚠️ Це не справжній AI — лише готові відповіді. Не покладайтесь на нього; для точного питання напишіть мені напряму.</div>
+</div>
+
+<canvas id="matrixCanvas"></canvas>
+<div id="secretBadge"></div>
 </body>
 </html>
